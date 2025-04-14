@@ -27,7 +27,6 @@
 
 - Tác giả gốc: `@DivineEngine`, `@app2smile`, `@Maasea`, `@VirgilClyne`  
 - Gợi ý & bổ sung: `@Choler`, `@bai1zi`  
-- Tổng hợp & phát hành dưới dạng Quantumult X: `@ddgksf2013`  
 - **Bản dịch & tinh chỉnh cho Shadowrocket bởi**: `@deezertidal`  
 - **Phân phối lại bởi**: `Nightmarket Server`  
 
