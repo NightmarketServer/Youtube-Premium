@@ -1,34 +1,26 @@
-#!name=YouTube Premium 2025 - NightmarketServer
-#!desc=Chặn quảng cáo YouTube toàn diện kèm trình phát PiP (Picture-in-Picture)
-#!arguments=blockUpload:true,blockImmersive:true,captionLang:zh-Hans,lyricLang:zh-Hans,scriptExecutionEngine:auto,debug:false
-# Tác giả gốc: @DivineEngine, @app2smile, @Maasea, @VirgilClyne,@Choler, @bai1zi
-# Dịch và tinh chỉnh cho Shadowrocket bởi: @deezertidal
-
+#!name=YouTube Premium 2025 - Nightmarket
+#!desc=Chặn quảng cáo YouTube + Music | Hỗ trợ PiP, phụ đề & phát nền | Yêu cầu bật bảo vệ QUIC
+#!author=Maasea[https://github.com/Maasea], VirgilClyne[https://github.com/VirgilClyne], Choler[https://github.com/Choler], DivineEngine[https://github.com/DivineEngine], app2smile[https://github.com/app2smile]
+#!icon=https://raw.githubusercontent.com/sooyaaabo/Loon/main/Icon/App-Icon/YouTube.png
+#!openUrl=https://apps.apple.com/app/id544007664
+#!tag=Chặn quảng cáo, YouTube, Music, PiP
+#!arguments=屏蔽上传按钮:true,屏蔽选段按钮:true,屏蔽Shorts按钮:true,字幕翻译语言:zh-Hans,歌词翻译语言:zh-Hans,脚本执行引擎:auto,启用调试模式:false
+#!arguments-desc=
+- **屏蔽参数 (true/false)**: Bật/tắt các nút không mong muốn
+- **翻译参数 (ngôn ngữ hoặc `off`)**: Mã ngôn ngữ theo Google Translate (ví dụ: zh-Hans, en), `off` để tắt
+- **脚本执行引擎 (auto/jsc/webview)**: Khuyên dùng `jsc`
+- **调试模式**: Bật để kiểm tra lỗi
+📌 **Phát hành bởi**: Nightmarket Server  
+---
 [Rule]
 AND,((DOMAIN-SUFFIX,googlevideo.com), (PROTOCOL,UDP)),REJECT
 AND,((DOMAIN,youtubei.googleapis.com), (PROTOCOL,UDP)),REJECT
 
-[Url Rewrite]
-# /Modules/YT-Adblocker.module
-# Chặn yêu cầu phát video có quảng cáo
-^https?:\/\/[\w-]+\.googlevideo\.com\/(?!(dclk_video_ads|videoplayback\?)).+&oad _ reject-200
-# ======= Chặn yêu cầu quảng cáo phổ biến ======= #
-^https?:\/\/(www|s)\.youtube\.com\/api\/stats\/ads _ reject-200
-^https?:\/\/(www|s)\.youtube\.com\/(pagead|ptracking) _ reject-200
-^https?:\/\/s\.youtube\.com\/api\/stats\/qoe\?adcontext _ reject-200
-# ======= Chặn quảng cáo trong video thông qua ctier ======= #
-(^https?:\/\/[\w-]+\.googlevideo\.com\/(?!dclk_video_ads).+?)&ctier=L(&.+?),ctier,(.+) $1$2$3 302
+[Map Local]
+^https?:\/\/[\w-]+\.googlevideo\.com\/initplayback.+&oad data-type=text data="" status-code=502
 
 [Script]
-# ======= Tìm kiếm | Trang phát | Shorts ||| PiP | Phát nền ======= #
-# Cấu hình phản hồi - phiên bản gốc từ Maasea
-# youtube = type=http-response,pattern=^https:\/\/youtubei\.googleapis\.com\/youtubei\/v1\/(browse|next|player|search|reel\/reel_watch_sequence|guide|account\/get_setting),requires-body=1,binary-body-mode=1,script-path=https://raw.githubusercontent.com/Maasea/sgmodule/master/Script/Youtube/dist/youtube.response.preview.js
-
-# Cấu hình yêu cầu
-# youtube.request = type=http-request,pattern=^https:\/\/youtubei\.googleapis\.com\/youtubei\/v1\/(browse|next|player|reel\/reel_watch_sequence|get_watch),requires-body=1,max-size=-1,binary-body-mode=1,engine={{{scriptExecutionEngine}}},script-path=https://raw.githubusercontent.com/Maasea/sgmodule/master/Script/Youtube/dist/youtube.request.preview.js
-
-# Cấu hình phản hồi chính thức - hỗ trợ tùy chỉnh ngôn ngữ, chặn nút
-youtube.response = type=http-response,pattern=^https:\/\/youtubei\.googleapis\.com\/youtubei\/v1\/(browse|next|player|search|reel\/reel_watch_sequence|guide|account\/get_setting|get_watch),requires-body=1,max-size=-1,binary-body-mode=1,engine={{{脚本执行引擎}}},script-path=https://raw.githubusercontent.com/Maasea/sgmodule/master/Script/Youtube/youtube.response.js,argument="{"lyricLang":"{{{歌词翻译语言}}}","captionLang":"{{{字幕翻译语言}}}","blockUpload":{{{屏蔽上传按钮}}},"blockImmersive":{{{屏蔽选段按钮}}},"debug":{{{启用调试模式}}}}"
+YouTube响应 = type=http-response,pattern=^https:\/\/youtubei\.googleapis\.com\/youtubei\/v1\/(browse|next|player|search|reel\/reel_watch_sequence|guide|account\/get_setting|get_watch),requires-body=1,max-size=-1,binary-body-mode=1,engine={{{脚本执行引擎}}},script-path=https://raw.githubusercontent.com/Maasea/sgmodule/master/Script/Youtube/youtube.response.js,argument="{"lyricLang":"{{{歌词翻译语言}}}","captionLang":"{{{字幕翻译语言}}}","blockUpload":{{{屏蔽上传按钮}}},"blockImmersive":{{{屏蔽选段按钮}}},"blockShorts":{{{屏蔽Shorts按钮}}},"debug":{{{启用调试模式}}}}"
 
 [MITM]
-hostname = %APPEND% -redirector*.googlevideo.com,*.googlevideo.com,www.youtube.com,s.youtube.com,youtubei.googleapis.com
+hostname = %APPEND% youtu.be, *.googlevideo.com, youtubei.googleapis.com
