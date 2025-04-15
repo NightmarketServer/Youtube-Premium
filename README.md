@@ -25,9 +25,7 @@
 
 ## 🧠 Thông tin kỹ thuật
 
-- Tác giả gốc: `@DivineEngine`, `@app2smile`, `@Maasea`, `@VirgilClyne`  
-- Gợi ý & bổ sung: `@Choler`, `@bai1zi`  
-- **Bản dịch & tinh chỉnh cho Shadowrocket bởi**: `@deezertidal`  
+- Tác giả gốc: `@dhungx`
 - **Phân phối lại bởi**: `Nightmarket Server`  
 
 ---
