@@ -25,7 +25,11 @@
 
 ## 🧠 Thông tin kỹ thuật
 
-- Tác giả gốc: `@dhungx`
+- [`@Maasea`](https://github.com/Maasea)  
+- [`@VirgilClyne`](https://github.com/VirgilClyne)  
+- [`@Choler`](https://github.com/Choler)  
+- [`@DivineEngine`](https://github.com/DivineEngine)  
+- [`@app2smile`](https://github.com/app2smile)
 - **Phân phối lại bởi**: `Nightmarket Server`  
 
 ---
