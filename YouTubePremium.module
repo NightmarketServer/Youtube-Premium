@@ -1,42 +1,40 @@
 #!name=YouTube Premium 2025 - Nightmarket
 #!desc=Chặn quảng cáo YouTube + Music | Hỗ trợ PiP, phụ đề & phát nền | Yêu cầu bật bảo vệ QUIC
 #!tag=Chặn quảng cáo, YouTube, Music, PiP
-# 👤 Author: : @DivineEngine, @app2smile, @Maasea, @quocchienn
+# 👤 Author: : @DivineEngine, @app2smile, @Maasea
 # 💬 Discord: https://discord.gg/juY9tw5AJY  
 # 🚀 Released by: Nightmarket Server  
 #!icon = https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/YouTube.png
-
-[General]
-private-ip-answer = true
-bypass-system = true
-ipv6 = false
-prefer-ipv6 = false
-dns-server = 94.140.14.14, 94.140.15.15
-fallback-dns-server = 76.76.2.0, 76.76.10.0
-skip-proxy = 192.168.0.0/16, 10.0.0.0/8, 172.16.0.0/12, localhost, *.local, captive.apple.com
-tun-excluded-routes = 10.0.0.0/8, 100.64.0.0/10, 127.0.0.0/8, 169.254.0.0/16, 172.16.0.0/12, 192.0.0.0/24, 192.0.2.0/24, 192.88.99.0/24, 192.168.0.0/16, 198.51.100.0/24, 203.0.113.0/24, 224.0.0.0/4, 255.255.255.255/32, 239.255.255.250/32
-update-url = https://raw.githubusercontent.com/quocchienn/YouTubePIP/refs/heads/YouTube%2B%2B/YouTubefix2.conf
+# Origin Author: @DivineEngine, @app2smile, @Maasea, @VirgilClyne
+# Other hints: @Choler, @bai1zi
+# Merged and released by @ddgksf2013 in form of qx
+# Translated and refined for shadowrocket by @deezertidal
 
 [Rule]
-RULE-SET,https://raw.githubusercontent.com/bigdargon/hostsVN/master/option/hostsVN-surge-rule.conf,REJECT
-RULE-SET,https://raw.githubusercontent.com/bigdargon/hostsVN/master/option/hostsVN-surge-exceptions-rule.conf,DIRECT
-DOMAIN-SUFFIX,googlevideo.com,DIRECT
-DOMAIN-SUFFIX,youtubei.googleapis.com,DIRECT
-IP-CIDR,0.0.0.0/32,REJECT,no-resolve
-FINAL,DIRECT
+AND,((DOMAIN-SUFFIX,googlevideo.com), (PROTOCOL,UDP)),REJECT
+AND,((DOMAIN,youtubei.googleapis.com), (PROTOCOL,UDP)),REJECT
 
-[URL Rewrite]
-^https?:\/\/[\w-]+\.googlevideo\.com\/initplayback.+&oad _ REJECT-IMG
-https?:\/\/.+\.googlevideo\.com\/ptracking\?pltype=adhost reject header
-https?:\/\/.+\.youtube\.com\/api\/stats\/.+adformat reject header
-https?:\/\/m\.youtube\.com\/_get_ads reject header
-https?:\/\/pagead2\.googlesyndication\.com\/pagead\/ reject header
-https?:\/\/s\.youtube\.com\/api\/stats\/watchtime?adformat reject header
-https?:\/\/youtubei\.googleapis\.com/.+ad_break reject header
+[Url Rewrite]
+# /Modules/YT-Adblocker.module
+# ^https?:\/\/[\w-]+\.googlevideo\.com\/initplayback.+&oad - reject-img
+^https?:\/\/[\w-]+\.googlevideo\.com\/(?!(dclk_video_ads|videoplayback\?)).+&oad _ 302
+# ======= Universal Ad Request ======= #
+^https?:\/\/(www|s)\.youtube\.com\/api\/stats\/ads _ 302
+^https?:\/\/(www|s)\.youtube\.com\/(pagead|ptracking) _ 302
+^https?:\/\/s\.youtube\.com\/api\/stats\/qoe\?adcontext _ 302
+# ======= General Video Ad request ======= #
+(^https?:\/\/[\w-]+\.googlevideo\.com\/(?!dclk_video_ads).+?)&ctier=L(&.+?),ctier,(.+) $1$2$3 302
+^https:\/\/youtubei\.googleapis\.com\/(youtubei\/v1\/(browse|next|player|search|reel\/reel_watch_sequence|guide|account\/get_setting|get_watch))(\?(.*))?$ {{{Yêu Cầu Dịch Vụ Xử Lý}}}/$1?blockUpload={{{Ẩn Nút Tải Lên}}}&blockImmersive={{{Nút Chọn Khối}}}&blockShorts={{{Ẩn Nút Shorts}}}&captionLang={{{Cài Phụ Đề}}}&lyricLang={{{歌词翻译语言}}}&$4 307
+
+[Map Local]
+^https?:\/\/[\w-]+\.googlevideo\.com\/initplayback.+&oad data-type=text data="" status-code=200
 
 [Script]
-youtube.response = type=http-response,pattern=^https:\/\/youtubei\.googleapis\.com\/youtubei\/v1\/(browse|next|player|search|reel\/reel_watch_sequence|guide|account\/get_setting|get_watch),requires-body=1,max-size=-1,binary-body-mode=1,script-path=https://raw.githubusercontent.com/Maasea/sgmodule/refs/heads/master/Script/Youtube/youtube.response.js,argument="{\"lyricLang\":\"{{null}}\",\"captionLang\":\"{{{null}}}\",\"blockUpload\":{{{true}}},\"blockImmersive\":{{{true}}},\"debug\":{{{false}}}}"
+# ======= Search|Play Page|Short Video ||| PiP|Background Play ======= #
+# youtube = type=http-response,pattern=^https:\/\/youtubei\.googleapis\.com\/youtubei\/v1\/(browse|next|player|search|reel\/reel_watch_sequence|guide|account\/get_setting),requires-body=1,binary-body-mode=1,script-path=https://raw.githubusercontent.com/Maasea/sgmodule/master/Script/Youtube/dist/youtube.response.preview.js
+# youtube.request = type=http-request,pattern=^https:\/\/youtubei\.googleapis\.com\/youtubei\/v1\/(browse|next|player|reel\/reel_watch_sequence|get_watch),requires-body=1,max-size=-1,binary-body-mode=1,engine={{{scriptExecutionEngine}}},script-path=https://raw.githubusercontent.com/Maasea/sgmodule/master/Script/Youtube/dist/youtube.request.preview.js
+# youtube.response = type=http-response,pattern=^https:\/\/youtubei\.googleapis\.com\/youtubei\/v1\/(browse|next|player|search|reel\/reel_watch_sequence|guide|account\/get_setting|get_watch),requires-body=1,max-size=-1,binary-body-mode=1,engine={{{scriptExecutionEngine}}},script-path=https://raw.githubusercontent.com/Maasea/sgmodule/master/Script/Youtube/dist/youtube.response.preview.js,argument="{"lyricLang":"{{{lyricLang}}}","captionLang":"{{{captionLang}}}","blockUpload":{{{blockUpload}}},"blockImmersive":{{{blockImmersive}}},"debug":{{{debug}}}}"
+youtube.response = type=http-response,pattern=^https:\/\/youtubei\.googleapis\.com\/(youtubei\/v1\/(browse|next|player|search|reel\/reel_watch_sequence|guide|account\/get_setting|get_watch))(\?(.*))?$,requires-body=1,max-size=-1,binary-body-mode=1,script-path=https://raw.githubusercontent.com/Maasea/sgmodule/master/Script/Youtube/youtube.response.js,argument="{"lyricLang":off"{{{lyricLang}}}","captionLang":off"{{{captionLang}}}","blockUpload":true"{{{blockUpload}}}","blockImmersive":true"{{{blockImmersive}}}","blockShorts":true"{{{blockShorts}}}","debug":true"{{{debug}}}"}"
 
 [MITM]
-hostname = %APPEND% *.googlevideo.com, youtubei.googleapis.com
-enable = true
+hostname = %APPEND% -redirector*.googlevideo.com,*.googlevideo.com,www.youtube.com,s.youtube.com,youtubei.googleapis.com
