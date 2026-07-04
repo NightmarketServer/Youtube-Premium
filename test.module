@@ -1,0 +1,14 @@
+#!name=Test HTML Inject
+#!desc=Test inject HTML bằng Shadowrocket
+#!author=Night Market
+
+[Header Rewrite]
+^https:\/\/www\.google\.com\/.* request-header Accept-Encoding identity
+
+[Script]
+Test HTML = type=http-response,\
+pattern=^https:\/\/www\.google\.com\/.*$,\
+requires-body=1,\
+max-size=1048576,\
+timeout=10,\
+script-path=https://raw.githubusercontent.com/NightmarketServer/Youtube-Premium/main/testg.js
